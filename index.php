@@ -1,6 +1,13 @@
 <?php
-$con = mysqli_connect("dbserver","root","dbroot123");
 
+// DB Details
+$dbhost = "dbserver";
+$dbuser = "root";
+$dbpass = "dbroot123";
+$dbname = "my_db";
+$dbtable = "domore";
+
+$con = mysqli_connect($dbhost, $dbuser, $dbpass);
 // Check connection
 if (mysqli_connect_errno()) {
   echo "Failed to connect to MySQL: " . mysqli_connect_error();
@@ -9,26 +16,31 @@ if (mysqli_connect_errno()) {
 $msg="";
 
 // Create database
-$sql = "CREATE DATABASE my_db IF NOT EXISTS";
-if ($conn->query($sql) === TRUE) {
+// Create database
+$sql = "CREATE DATABASE IF NOT EXISTS " . $dbname;
+if ($con->query($sql) === TRUE) {
     // echo "Database created successfully" . "<br />\n";
     $msg.="DB OK" . "<br />\n";
     mysqli_select_db($con,"my_db");
 
     // Create table
-    $sql = "CREATE TABLE IF NOT EXISTS domore (id int AUTO_INCREMENT PRIMARY KEY, data varchar(255))";
-    if ($conn->query($sql) === TRUE) {
+    $sql = "CREATE TABLE IF NOT EXISTS " . $dbtable . " (id int AUTO_INCREMENT PRIMARY KEY, data varchar(255))";
+    if ($con->query($sql) === TRUE) {
       $msg.="DB Table OK" . "<br />\n";
 
       // Insert record
       $sql = "INSERT INTO domore SET data = 'Hello Me - " . time() . "'";
-      if ($conn->query($sql) === TRUE) {
+      if ($con->query($sql) === TRUE) {
         // echo "Record inserted successfully" . "<br />\n";
         $msg.="DB Record OK" . "<br />\n";
-        $sql="SELECT * FROM domore ORDER BY id";
+        $sql="SELECT count(*) as CNT FROM domore";
         $result=mysqli_query($con,$sql);
-        echo '<pre>' . print_r($result, 1) . '</pre>' . "<br />\n";
-        $msg.=print_r($result, 1)  . "<br />\n";
+        $row=mysqli_fetch_row($result);
+        // echo '<pre>' . print_r($row, 1) . '</pre>' . "<br />\n";
+        // echo '<pre>' . print_r($result, 1) . '</pre>' . "<br />\n";
+        // $msg.= $row[0] . "<br />\n";
+        $count= $row[0];
+        // echo $msg.  "<br />\n";
         // mysqli_fetch_all($result,MYSQLI_ASSOC);
         mysqli_free_result($result);
 
@@ -130,7 +142,9 @@ mysqli_close($con);
                     <h3 data-aos="fade-up">Welcome to Dazzle</h3>
 
                     <h1 data-aos="fade-up">
-                        <?php echo "Hello!";?><br>
+                        Count: <?php echo $count;?><br>
+                        <?php echo $msg;?><br>
+                        Hello World!<br>
                     </h1>
 
                     <div class="buttons" data-aos="fade-up">
