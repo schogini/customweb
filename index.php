@@ -1,3 +1,57 @@
+<?php
+$con = mysqli_connect("dbserver","root","dbroot123");
+
+// Check connection
+if (mysqli_connect_errno()) {
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+}
+
+$msg="";
+
+// Create database
+$sql = "CREATE DATABASE my_db IF NOT EXISTS";
+if ($conn->query($sql) === TRUE) {
+    // echo "Database created successfully" . "<br />\n";
+    $msg.="DB OK" . "<br />\n";
+    mysqli_select_db($con,"my_db");
+
+    // Create table
+    $sql = "CREATE TABLE IF NOT EXISTS domore (id int AUTO_INCREMENT PRIMARY KEY, data varchar(255))";
+    if ($conn->query($sql) === TRUE) {
+      $msg.="DB Table OK" . "<br />\n";
+
+      // Insert record
+      $sql = "INSERT INTO domore SET data = 'Hello Me - " . time() . "'";
+      if ($conn->query($sql) === TRUE) {
+        // echo "Record inserted successfully" . "<br />\n";
+        $msg.="DB Record OK" . "<br />\n";
+        $sql="SELECT * FROM domore ORDER BY id";
+        $result=mysqli_query($con,$sql);
+        echo '<pre>' . print_r($result, 1) . '</pre>' . "<br />\n";
+        $msg.=print_r($result, 1)  . "<br />\n";
+        // mysqli_fetch_all($result,MYSQLI_ASSOC);
+        mysqli_free_result($result);
+
+      } else {
+        // echo "Error inserting record: " . $conn->error . "<br />\n";
+        $msg.="Error1=" . $conn->error . "<br />\n";
+
+      }
+
+    } else {
+      // echo "Error creating table: " . $conn->error . "<br />\n";
+      $msg.="Error2=" . $conn->error . "<br />\n";
+
+    }
+
+} else {
+    // echo "Error creating database: " . $conn->error . "<br />\n";
+    $msg.="Error3=" . $conn->error . "<br />\n";
+
+}
+
+mysqli_close($con);
+?>
 <!DOCTYPE html>
 <!--[if lt IE 9 ]><html class="no-js oldie" lang="en"> <![endif]-->
 <!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
@@ -76,9 +130,7 @@
                     <h3 data-aos="fade-up">Welcome to Dazzle</h3>
 
                     <h1 data-aos="fade-up">
-                        Creative Landing <br>
-                        Page to Showcase <br>
-                        Your Amazing App.
+                        <?php echo "Hello!";?><br>
                     </h1>
 
                     <div class="buttons" data-aos="fade-up">
