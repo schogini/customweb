@@ -144,7 +144,7 @@ mysqli_close($con);
                     <h1 data-aos="fade-up">
                         Count: <?php echo $count;?><br>
                         <?php echo $msg;?><br>
-                        Happy Yoga Day!<br>
+                        Happy Yoga Day 123!<br>
                     </h1>
 
                     <div class="buttons" data-aos="fade-up">
